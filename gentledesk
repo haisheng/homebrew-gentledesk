@@ -1,0 +1,10 @@
+#!/bin/bash
+set -euo pipefail
+HERE="$(cd "$(dirname "$0")" && pwd)"
+case "${1:-}" in
+  setup|install) shift; exec /bin/bash "$HERE/install.sh" "$@" ;;
+  uninstall) shift; exec /bin/bash "$HERE/uninstall.sh" "$@" ;;
+  --version) cat "$HERE/VERSION" ;;
+  --help|help|'') printf '%s\n' 'GentleDesk local companion' 'Usage: gentledesk setup CHROME_EXTENSION_ID' '       gentledesk uninstall' ;;
+  *) printf '%s\n' 'Unknown command. Use gentledesk --help.' >&2; exit 1 ;;
+esac

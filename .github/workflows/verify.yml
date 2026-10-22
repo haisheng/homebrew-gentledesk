@@ -1,0 +1,19 @@
+name: Verify companion
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and self-test
+        run: ./build.sh
+      - name: Check isolated registration
+        run: |
+          ./install.sh aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --test-root "$RUNNER_TEMP/GentleDesk fixture"
+          test -f "$RUNNER_TEMP/GentleDesk fixture/NativeMessagingHosts/com.deskassit.desktop.json"
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - shell: powershell
+        run: ./windows/host.ps1 -SelfTest

@@ -1,0 +1,14 @@
+#!/bin/bash
+#: Install and connect the GentleDesk local companion.
+#: Usage: brew gentledesk <chrome-extension-id>
+set -euo pipefail
+if [ "${1:-}" = '--help' ] || [ "$#" != 1 ] || ! [[ "$1" =~ ^[a-p]{32}$ ]]; then
+  printf '%s\n' 'Usage: brew gentledesk <32-letter Chrome extension ID>'
+  exit 1
+fi
+EXTENSION_ID="$1"
+BREW_BIN="${HOMEBREW_BREW_FILE:-$(command -v brew)}"
+FORMULA='haisheng/gentledesk/gentledesk'
+if ! "$BREW_BIN" list --versions "$FORMULA" >/dev/null 2>&1; then "$BREW_BIN" install "$FORMULA"; fi
+PREFIX="$("$BREW_BIN" --prefix "$FORMULA")"
+exec "$PREFIX/bin/gentledesk" setup "$EXTENSION_ID"
